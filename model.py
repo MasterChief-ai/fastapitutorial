@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Date
+from sqlalchemy import Column, Integer, String, Date, VARCHAR
 from database import Base
 
 class Book(Base):
@@ -7,4 +7,4 @@ class Book(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String(255), nullable=False)
     author = Column(String(255), nullable=False)
-    publish_date = Column(Date, nullable=False)
+    publish_date = Column(VARCHAR(10), nullable=False)

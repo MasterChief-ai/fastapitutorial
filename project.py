@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 import model
 from pydantic import BaseModel, field_validator
 from fastapi import Depends
-import datetime
+from datetime import datetime
 
 app = FastAPI()
 
@@ -13,14 +13,6 @@ class Bookstore(BaseModel):
     title: str
     author: str
     publish_date: str
-    @field_validator('publish_date')
-    @classmethod
-    def parse_custom_date(cls, value: str):
-        try:
-            # Parse 'DD-MM-YYYY' string into a real date object
-            return datetime.strptime(value, "%d-%m-%Y").date()
-        except ValueError:
-            raise ValueError("Date must be in DD-MM-YYYY format")
 
 @app.post("/books")
 def create_book(book: Bookstore, db: Session = Depends(get_db)):
@@ -34,3 +26,8 @@ def create_book(book: Bookstore, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_book)
     return new_book
+
+@app.get("/books")
+def get_books(db: Session = Depends(get_db)):
+    books = db.query(model.Book).all()
+    return books
